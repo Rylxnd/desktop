@@ -79,6 +79,16 @@ module.exports.getVersion = () => {
 	return require('../package.json').version;
 };
 
+module.exports.isRobloxClientOpen = () => {
+        const windows = windowManager.getWindows();
+	windows.forEach((window, i, arr) => {
+		let b = window.path.toLowerCase().includes('robloxplayer');
+		if (b)
+			return true;
+	});
+	return false;
+}
+
 module.exports.isRobloxClientFocused = () => {
 	const window = windowManager.getActiveWindow();
 	return window.path.toLowerCase().includes('robloxplayer');
