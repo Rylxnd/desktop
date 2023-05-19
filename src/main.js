@@ -16,6 +16,7 @@ const {
 	clearLogs,
 	openLogsFile,
 	getVersion,
+	isRobloxClientOpen,
 	isRobloxClientFocused,
 } = require('./utils');
 const Input = require('./input');
@@ -36,11 +37,15 @@ const CLIENT_URL = getClientUrl();
 let win;
 const input = new Input();
 let v;
+let lastClientOpenState = false;
 
 /**
  * @param {string} input
  */
 input.onInputChange = input => {
+	if (!lastClientOpenState)
+		return;
+	
 	if (input.length > 0) {
 		win.webContents.executeJavaScript(
 			`document.querySelector('.listening').classList.add('hidden'); document.querySelector('.command').classList.remove('hidden'); document.getElementById('command-value').innerText = '${input}';`
@@ -223,6 +228,25 @@ const registerShortcuts = () => {
 	);
 };
 
+const clientCheck = () => {
+	let b = isRobloxClientOpen();
+        if (lastClientOpenState !== b) {
+		lastClientOpenState = b;
+		
+		if (b) {	
+                        input.reset();
+			win.webContents.executeJavaScript(
+			        `document.querySelector('.play').classList.add('hidden');`
+			);
+		}
+		else {
+                        win.webContents.executeJavaScript(
+			        `document.querySelector('.listening').classList.add('hidden'); document.querySelector('.command').classList.add('hidden'); document.querySelector('.play').classList.remove('hidden');`
+			);
+		}
+        }
+}
+
 app.whenReady().then(() => {
 	// clear logs
 	clearLogs();
@@ -244,6 +268,9 @@ app.whenReady().then(() => {
 	});
 
 	showPrivacyDialog();
+	
+	// Only do check every 2 seconds to save performance :p
+	setInterval(clientCheck, 2000);
 });
 
 app.on('window-all-closed', () => {
