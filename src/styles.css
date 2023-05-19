@@ -45,7 +45,7 @@ a:hover {
     text-decoration: underline;
 }
 
-.listening, .command {
+.listening, .command .play {
     transition-duration: 200ms;
     display: flex;
     flex-direction: column;
@@ -63,7 +63,7 @@ a:hover {
     transform: translateY(0px);
 }
 
-.listening span {
+.listening .play span {
     font-size: 18px;
 }
 
