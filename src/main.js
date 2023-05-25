@@ -16,6 +16,8 @@ const {
 	clearLogs,
 	openLogsFile,
 	getVersion,
+	getStore,
+	setStore,
 	isRobloxClientOpen,
 	isRobloxClientFocused,
 } = require('./utils');
@@ -23,14 +25,11 @@ const Input = require('./input');
 const path = require('path');
 require('./updater');
 const { DOCS_PAGE } = require('./constants');
-const Store = require('electron-store');
 const log = require('electron-log');
 const mouseEvents = require('global-mouse-events');
 
 // override console logging functions with electron based logging
 Object.assign(console, log.functions);
-
-const store = new Store();
 
 const CLIENT_URL = getClientUrl();
 
@@ -188,7 +187,7 @@ const createWindow = () => {
 };
 
 const showPrivacyDialog = async () => {
-	if (store.get('accepted-privacy') === true)
+	if (getStore('accepted-privacy') === true)
 		return console.log('Privacy already accepted');
 
 	const { response } = await dialog.showMessageBox(win, {
@@ -200,7 +199,7 @@ const showPrivacyDialog = async () => {
 	});
 
 	console.log('Accepted privacy dialog');
-	store.set('accepted-privacy', true);
+	setStore('accepted-privacy', true);
 
 	if (response === 1) {
 		shell.openExternal(DOCS_PAGE);
