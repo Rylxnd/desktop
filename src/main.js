@@ -6,6 +6,7 @@ const {
 	globalShortcut,
 	autoUpdater,
 	clipboard,
+	ipcMain,
 } = require('electron');
 if (require('electron-squirrel-startup')) app.quit();
 const { GlobalKeyboardListener } = require('node-global-key-listener');
@@ -27,7 +28,6 @@ require('./updater');
 const { DOCS_PAGE } = require('./constants');
 const log = require('electron-log');
 const mouseEvents = require('global-mouse-events');
-const jquery = require('jquery');
 // override console logging functions with electron based logging
 Object.assign(console, log.functions);
 
@@ -37,14 +37,6 @@ let win;
 const input = new Input();
 let v;
 let lastClientOpenState = false;
-
-(() => {
-	let sw = jquery('#sw-require-rblx-client')
-	sw.on('click', () => {
-                setStore('doClientChecks', sw.val());
-	}
-})()
-
 
 /**
  * @param {string} input
@@ -275,6 +267,14 @@ app.whenReady().then(() => {
 	});
 
 	showPrivacyDialog();
+	
+	if (getStore('requireRblxClient') !== true) {
+		win.webContents.executeJavaScript('document.getElementById('sw-require-rblx-client').checked = false;');
+		}
+	
+	ipcMain.on('sw-require-roblox-client-toggled', (e, t) => {
+		setStore('requireRblxClient', t);
+	})
 	
 	// Only do check every 2 seconds to save performance :p
 	setInterval(clientCheck, 2000);
