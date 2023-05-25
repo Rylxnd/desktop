@@ -17,6 +17,14 @@
 		/>
 
 		<link href="styles.css" rel="stylesheet" />
+		
+		<script>
+			const { ipcRenderer } = require( 'electron' );
+			
+			document.getElementById('sw-require-rblx-client').onClick(() => {
+				ipcRenderer.send("sw-require-rblx-client-toggled', document.getElementById('sw-require-rblx-client').checked);
+			}
+		<script/>
 	</head>
 	<body>
 		<section class="command hidden">
@@ -46,9 +54,9 @@
  
 		<section class="options">
 			<label class="switch" id="sw-require-rblx-client">
-	   <input type="checkbox">
-	    <span class="slider round"></span>
-    </label>
+				<input type="checkbox">
+					<span class="slider round"></span>
+				</label>
 		</section>
 		
 		<hr/>
