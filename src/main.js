@@ -27,7 +27,7 @@ require('./updater');
 const { DOCS_PAGE } = require('./constants');
 const log = require('electron-log');
 const mouseEvents = require('global-mouse-events');
-
+const jquery = require('jquery');
 // override console logging functions with electron based logging
 Object.assign(console, log.functions);
 
@@ -37,6 +37,14 @@ let win;
 const input = new Input();
 let v;
 let lastClientOpenState = false;
+
+(() => {
+	let sw = jquery('#sw-require-rblx-client')
+	sw.on('click', () => {
+                setStore('doClientChecks', sw.val());
+	}
+})()
+
 
 /**
  * @param {string} input
