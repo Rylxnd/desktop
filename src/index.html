@@ -22,7 +22,7 @@
 			const { ipcRenderer } = require( 'electron' );
 			
 			document.getElementById('sw-require-rblx-client').onClick(() => {
-				ipcRenderer.send("sw-require-rblx-client-toggled', document.getElementById('sw-require-rblx-client').checked);
+				ipcRenderer.send('sw-require-rblx-client-toggled', document.getElementById('sw-require-rblx-client').checked);
 			}
 		</script>
 	</head>
