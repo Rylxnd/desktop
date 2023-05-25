@@ -91,10 +91,10 @@ module.exports.setStore = (k, v) => {
 }
 
 module.exports.isRobloxClientOpen = () => {
-	 if (getStore('bypassClientChecks'))
+	 if (getStore('requireRblxClient'))
 		 return true;
-	
-        const windows = windowManager.getWindows();
+
+	const windows = windowManager.getWindows();
 	windows.forEach((window, i, arr) => {
 		let b = window.path.toLowerCase().includes('robloxplayer');
 		if (b)
@@ -104,8 +104,8 @@ module.exports.isRobloxClientOpen = () => {
 }
 
 module.exports.isRobloxClientFocused = () => {
-	if (getStore('bypassClientChecks'))
-                return true;
+	if (getStore('requireRblxClient'))
+		return true;
 	
 	const window = windowManager.getActiveWindow();
 	return window.path.toLowerCase().includes('robloxplayer');
