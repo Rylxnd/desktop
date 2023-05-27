@@ -82,29 +82,31 @@ module.exports.getVersion = () => {
 	return require('../package.json').version;
 };
 
-module.exports.getStore = (k) => {
-        return store.get(k);
-}
+const getStore = (k) => {
+	return store.get(k);
+};
+module.exports.getStore = getStore;
 
-module.exports.setStore = (k, v) => {
-         store.set(k, v);
-}
+const setStore = (k, v) => {
+	store.set(k, v);
+};
+module.exports.setStore = setStore;
 
 module.exports.isRobloxClientOpen = () => {
-	 if (getStore('requireRblxClient'))
+	 if (getStore('requireRblxClient') === false)
 		 return true;
 
 	const windows = windowManager.getWindows();
-	windows.forEach((window, i, arr) => {
-		let b = window.path.toLowerCase().includes('robloxplayer');
-		if (b)
-			return true;
-	});
+	let window = windows.find(window => window.path.toLowerCase().includes("robloxplayer"));
+
+	if (window != undefined)
+		return true;
+
 	return false;
 }
 
 module.exports.isRobloxClientFocused = () => {
-	if (getStore('requireRblxClient'))
+	if (getStore('requireRblxClient') === false)
 		return true;
 	
 	const window = windowManager.getActiveWindow();

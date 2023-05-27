@@ -17,14 +17,6 @@
 		/>
 
 		<link href="styles.css" rel="stylesheet" />
-		
-		<script>
-			const { ipcRenderer } = require( 'electron' );
-			
-			document.getElementById('sw-require-rblx-client').onClick(() => {
-				ipcRenderer.send('sw-require-rblx-client-toggled', document.getElementById('sw-require-rblx-client').checked);
-			}
-		</script>
 	</head>
 	<body>
 		<section class="command hidden">
@@ -51,16 +43,18 @@
 		<section class="play">
 			<span>Open ER:LC on Roblox to start logging</span>
 		</section>
- 
-		<section class="options">
-			<label class="switch">
-				<input type="checkbox" id="sw-require-rblx-client" checked="true">
-					<span class="slider round"></span>
-				</label>
-		</section>
 		
-		<hr/>
 		<footer>
+			<section class="options">
+				<div>
+					<p>Require Roblox Client Open and Focused</p>
+					<label class="switch">
+					<input type="checkbox" id="sw-require-rblx-client">
+						<span class="slider round"></span>
+					</label>
+				</div>
+			</section>
+			<hr>
 			<div>
 				<img src="https://melonly.xyz/brand/logo.png" alt="melonly logo" />
 				<p>Melonly Desktop App</p>
@@ -82,5 +76,6 @@
 				>.
 			</p>
 		</footer>
+		<script src="./renderer.js"></script>
 	</body>
 </html>

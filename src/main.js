@@ -94,6 +94,7 @@ const createWindow = () => {
 		height: 600,
 		webPreferences: {
 			nativeWindowOpen: true,
+			preload: path.join(__dirname, 'preload.js')
 		},
 		autoHideMenuBar: true,
 		backgroundColor: '#101113',
@@ -229,25 +230,21 @@ const registerShortcuts = () => {
 
 const clientCheck = () => {
 	let b = isRobloxClientOpen();
-        if (lastClientOpenState !== b) {
+
+	if (lastClientOpenState !== b) {
 		lastClientOpenState = b;
 		
 		if (b) {	
-                        input.reset();
-			win.webContents.executeJavaScript(
-			        `document.querySelector('.play').classList.add('hidden');`
-			);
+			input.reset();
+			win.webContents.executeJavaScript(`document.querySelector('.play').classList.add('hidden');`);
 		}
 		else {
-                        win.webContents.executeJavaScript(
-			        `document.querySelector('.listening').classList.add('hidden'); document.querySelector('.command').classList.add('hidden'); document.querySelector('.play').classList.remove('hidden');`
-			);
+			win.webContents.executeJavaScript(`document.querySelector('.listening').classList.add('hidden'); document.querySelector('.command').classList.add('hidden'); document.querySelector('.play').classList.remove('hidden');`);
 		}
-        }
+	}
 }
 
 app.whenReady().then(() => {
-	// clear logs
 	clearLogs();
 
 	console.log('Ready');
@@ -268,16 +265,19 @@ app.whenReady().then(() => {
 
 	showPrivacyDialog();
 	
-	if (getStore('requireRblxClient') !== true) {
-		win.webContents.executeJavaScript('document.getElementById('sw-require-rblx-client').checked = false;');
-		}
+	if (getStore('requireRblxClient') !== false) {
+		win.webContents.executeJavaScript(`document.getElementById('sw-require-rblx-client').checked = true;`);
+	}
 	
-	ipcMain.on('sw-require-roblox-client-toggled', (e, t) => {
+	ipcMain.on('sw-require-rblx-client-toggled', (e, t) => {
 		setStore('requireRblxClient', t);
+		clientCheck();
 	})
 	
-	// Only do check every 2 seconds to save performance :p
-	setInterval(clientCheck, 2000);
+	// Do initial start-up check
+	clientCheck();
+	// Only do check every 5 seconds to save performance :p
+	setInterval(clientCheck, 5000);
 });
 
 app.on('window-all-closed', () => {
